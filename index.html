@@ -1,12 +1,62 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>My Portfolio</title>
-</head>
-<body>
-  <h1>Hello from dk-1717!</h1>
-  <p>This site is live using GitHub Pages 🚀</p>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shree Brahmanikrupa Textile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .pattern-bg {
+        background-image: repeating-linear-gradient(
+          45deg,
+          rgba(255, 255, 255, 0.03) 0,
+          rgba(255, 255, 255, 0.03) 1px,
+          transparent 1px,
+          transparent 40px
+        );
+      }
+    </style>
+  </head>
+  <body class="bg-gradient-to-br from-blue-900 to-indigo-900 text-white pattern-bg min-h-screen">
+    <!-- Navbar -->
+    <header class="flex justify-between items-center px-8 py-4 bg-gray-900 bg-opacity-90">
+      <div class="flex items-center space-x-3">
+        <div class="bg-white text-blue-900 font-bold rounded-lg w-10 h-10 flex items-center justify-center shadow">SB</div>
+        <div>
+          <h1 class="text-xl font-extrabold">Shree Brahmanikrupa</h1>
+          <p class="text-sm tracking-wide">TEXTILE</p>
+        </div>
+      </div>
+      <nav class="space-x-6 text-sm font-semibold">
+        <a href="#" class="hover:text-blue-300">ABOUT</a>
+        <a href="#" class="hover:text-blue-300">PRODUCTS</a>
+        <a href="#" class="hover:text-blue-300">CONTACT</a>
+      </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="text-center py-28 px-4">
+      <div class="inline-block bg-blue-800 px-6 py-2 rounded-full text-sm tracking-widest font-semibold mb-6 shadow-lg">
+        WELCOME TO
+      </div>
+      <h2 class="text-5xl font-extrabold mb-2">Shree Brahmanikrupa</h2>
+      <h3 class="text-3xl font-light text-indigo-200 mb-6">Textile</h3>
+      <p class="max-w-2xl mx-auto text-lg text-indigo-100 mb-10">
+        Where tradition meets elegance in every thread. Discover our premium collection of fabrics that define excellence.
+      </p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#" class="bg-white text-blue-900 font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-100 transition">
+          Explore Collection →
+        </a>
+        <a href="#" class="bg-blue-800 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+          Contact Us →
+        </a>
+      </div>
+    </section>
+  </body>
 </html>
