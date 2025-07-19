@@ -3,60 +3,399 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shree Brahmanikrupa Textile</title>
+    <title>Shree Brahmanikrupa Textile - Premium Fabrics & Textiles</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
-      body {
+      .serif-font {
+        font-family: 'DM Serif Display', serif;
+      }
+      .sans-font {
         font-family: 'Inter', sans-serif;
       }
-      .pattern-bg {
-        background-image: repeating-linear-gradient(
-          45deg,
-          rgba(255, 255, 255, 0.03) 0,
-          rgba(255, 255, 255, 0.03) 1px,
-          transparent 1px,
-          transparent 40px
-        );
+      .textile-pattern {
+        background-image: 
+          radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+          radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+          repeating-linear-gradient(
+            45deg,
+            rgba(255, 255, 255, 0.01) 0px,
+            rgba(255, 255, 255, 0.01) 1px,
+            transparent 1px,
+            transparent 60px
+          ),
+          repeating-linear-gradient(
+            -45deg,
+            rgba(255, 255, 255, 0.005) 0px,
+            rgba(255, 255, 255, 0.005) 1px,
+            transparent 1px,
+            transparent 60px
+          );
+      }
+      .glassmorphism {
+        background: rgba(255, 255, 255, 0.05);
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .fade-in {
+        animation: fadeInUp 1s ease-out forwards;
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      .fade-in-delay-1 {
+        animation-delay: 0.2s;
+      }
+      .fade-in-delay-2 {
+        animation-delay: 0.4s;
+      }
+      .fade-in-delay-3 {
+        animation-delay: 0.6s;
+      }
+      @keyframes fadeInUp {
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .hero-overlay {
+        background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(55, 65, 81, 0.6) 100%);
+      }
+      .btn-primary {
+        background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
+        box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3);
+      }
+      .btn-secondary {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+      .floating-animation {
+        animation: floating 3s ease-in-out infinite;
+      }
+      @keyframes floating {
+        0%, 100% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
       }
     </style>
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: {
+                50: '#eff6ff',
+                100: '#dbeafe',
+                500: '#3b82f6',
+                600: '#2563eb',
+                700: '#1d4ed8',
+                900: '#1e3a8a'
+              },
+              gold: {
+                400: '#fbbf24',
+                500: '#f59e0b'
+              }
+            }
+          }
+        }
+      }
+    </script>
   </head>
-  <body class="bg-gradient-to-br from-blue-900 to-indigo-900 text-white pattern-bg min-h-screen">
+  <body class="sans-font bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white textile-pattern min-h-screen">
     <!-- Navbar -->
-    <header class="flex justify-between items-center px-8 py-4 bg-gray-900 bg-opacity-90">
-      <div class="flex items-center space-x-3">
-        <div class="bg-white text-blue-900 font-bold rounded-lg w-10 h-10 flex items-center justify-center shadow">SB</div>
-        <div>
-          <h1 class="text-xl font-extrabold">Shree Brahmanikrupa</h1>
-          <p class="text-sm tracking-wide">TEXTILE</p>
+    <header class="fixed top-0 w-full z-50 glassmorphism">
+      <div class="max-w-7xl mx-auto flex justify-between items-center px-6 lg:px-8 py-4">
+        <div class="flex items-center space-x-4">
+          <div class="bg-gradient-to-br from-white to-blue-50 text-blue-900 font-bold rounded-xl w-12 h-12 flex items-center justify-center shadow-lg floating-animation">
+            <span class="serif-font text-lg">SB</span>
+          </div>
+          <div>
+            <h1 class="serif-font text-xl lg:text-2xl font-normal">Shree Brahmanikrupa</h1>
+            <p class="text-xs lg:text-sm tracking-[0.2em] text-blue-200 font-medium">TEXTILE</p>
+          </div>
+        </div>
+        <nav class="hidden md:flex items-center space-x-8">
+          <a href="#about" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors duration-300">
+            <i data-feather="info" class="w-4 h-4"></i>
+            <span>ABOUT</span>
+          </a>
+          <a href="#products" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors duration-300">
+            <i data-feather="grid" class="w-4 h-4"></i>
+            <span>PRODUCTS</span>
+          </a>
+          <a href="#contact" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors duration-300">
+            <i data-feather="mail" class="w-4 h-4"></i>
+            <span>CONTACT</span>
+          </a>
+          <div class="flex items-center space-x-4 ml-6">
+            <a href="#" class="text-blue-300 hover:text-white transition-colors">
+              <i data-feather="instagram" class="w-5 h-5"></i>
+            </a>
+            <a href="#" class="text-blue-300 hover:text-white transition-colors">
+              <i data-feather="linkedin" class="w-5 h-5"></i>
+            </a>
+          </div>
+        </nav>
+        <!-- Mobile menu button -->
+        <button class="md:hidden text-white" onclick="toggleMobileMenu()">
+          <i data-feather="menu" class="w-6 h-6"></i>
+        </button>
+      </div>
+      <!-- Mobile menu -->
+      <div id="mobile-menu" class="hidden md:hidden glassmorphism border-t border-white/10">
+        <div class="px-6 py-4 space-y-4">
+          <a href="#about" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors">
+            <i data-feather="info" class="w-4 h-4"></i>
+            <span>ABOUT</span>
+          </a>
+          <a href="#products" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors">
+            <i data-feather="grid" class="w-4 h-4"></i>
+            <span>PRODUCTS</span>
+          </a>
+          <a href="#contact" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors">
+            <i data-feather="mail" class="w-4 h-4"></i>
+            <span>CONTACT</span>
+          </a>
+          <div class="flex items-center space-x-4 pt-4 border-t border-white/10">
+            <a href="#" class="text-blue-300 hover:text-white transition-colors">
+              <i data-feather="instagram" class="w-5 h-5"></i>
+            </a>
+            <a href="#" class="text-blue-300 hover:text-white transition-colors">
+              <i data-feather="linkedin" class="w-5 h-5"></i>
+            </a>
+          </div>
         </div>
       </div>
-      <nav class="space-x-6 text-sm font-semibold">
-        <a href="#" class="hover:text-blue-300">ABOUT</a>
-        <a href="#" class="hover:text-blue-300">PRODUCTS</a>
-        <a href="#" class="hover:text-blue-300">CONTACT</a>
-      </nav>
     </header>
 
     <!-- Hero Section -->
-    <section class="text-center py-28 px-4">
-      <div class="inline-block bg-blue-800 px-6 py-2 rounded-full text-sm tracking-widest font-semibold mb-6 shadow-lg">
-        WELCOME TO
+    <section class="relative min-h-screen flex items-center justify-center px-4 pt-24">
+      <div class="absolute inset-0 hero-overlay"></div>
+      <!-- Background textile pattern overlay -->
+      <div class="absolute inset-0 opacity-5">
+        <div class="absolute top-20 left-10 w-32 h-32 border border-white/20 rounded-full"></div>
+        <div class="absolute top-40 right-20 w-24 h-24 border border-white/20 rounded-full"></div>
+        <div class="absolute bottom-40 left-20 w-40 h-40 border border-white/20 rounded-full"></div>
       </div>
-      <h2 class="text-5xl font-extrabold mb-2">Shree Brahmanikrupa</h2>
-      <h3 class="text-3xl font-light text-indigo-200 mb-6">Textile</h3>
-      <p class="max-w-2xl mx-auto text-lg text-indigo-100 mb-10">
-        Where tradition meets elegance in every thread. Discover our premium collection of fabrics that define excellence.
-      </p>
-      <div class="flex flex-col sm:flex-row gap-4 justify-center">
-        <a href="#" class="bg-white text-blue-900 font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-100 transition">
-          Explore Collection →
-        </a>
-        <a href="#" class="bg-blue-800 px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
-          Contact Us →
-        </a>
+      <div class="relative text-center max-w-4xl mx-auto">
+        <div class="fade-in inline-block glassmorphism px-8 py-3 rounded-full text-sm tracking-[0.3em] font-medium mb-8">
+          <i data-feather="star" class="w-4 h-4 inline mr-2"></i>
+          WELCOME TO EXCELLENCE
+        </div>
+        <h2 class="fade-in fade-in-delay-1 serif-font text-4xl lg:text-7xl font-normal mb-4 leading-tight">
+          Shree Brahmanikrupa
+        </h2>
+        <h3 class="fade-in fade-in-delay-1 serif-font text-2xl lg:text-4xl font-normal text-blue-200 mb-8 italic">
+          Textile
+        </h3>
+        <p class="fade-in fade-in-delay-2 max-w-2xl mx-auto text-lg lg:text-xl text-blue-100 mb-12 leading-relaxed font-light">
+          Where heritage craftsmanship meets contemporary elegance. Discover our exquisite collection of premium fabrics that weave stories of tradition and innovation.
+        </p>
+        <div class="fade-in fade-in-delay-3 flex flex-col sm:flex-row gap-6 justify-center items-center">
+          <a href="#products" class="btn-secondary text-blue-900 font-semibold px-8 py-4 rounded-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-2">
+            <i data-feather="eye" class="w-5 h-5"></i>
+            <span>Explore Collection</span>
+          </a>
+          <a href="#contact" class="btn-primary text-white font-semibold px-8 py-4 rounded-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-2">
+            <i data-feather="phone" class="w-5 h-5"></i>
+            <span>Get In Touch</span>
+          </a>
+        </div>
       </div>
     </section>
+
+    <!-- Trust Badges Section -->
+    <section class="py-16 px-4" id="about">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+          <h3 class="serif-font text-3xl lg:text-4xl mb-4">Why Choose Us</h3>
+          <p class="text-blue-200 max-w-2xl mx-auto">Our commitment to quality and excellence has made us a trusted name in the textile industry for decades.</p>
+        </div>
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
+          <div class="text-center glassmorphism p-6 rounded-2xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2">
+            <i data-feather="award" class="w-8 h-8 mx-auto mb-3 text-gold-400"></i>
+            <h4 class="font-semibold text-sm mb-1">ISO Certified</h4>
+            <p class="text-xs text-blue-200">Quality Assured</p>
+          </div>
+          <div class="text-center glassmorphism p-6 rounded-2xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2">
+            <i data-feather="calendar" class="w-8 h-8 mx-auto mb-3 text-gold-400"></i>
+            <h4 class="font-semibold text-sm mb-1">Est. 1985</h4>
+            <p class="text-xs text-blue-200">40+ Years Legacy</p>
+          </div>
+          <div class="text-center glassmorphism p-6 rounded-2xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2">
+            <i data-feather="check-circle" class="w-8 h-8 mx-auto mb-3 text-gold-400"></i>
+            <h4 class="font-semibold text-sm mb-1">100% Cotton</h4>
+            <p class="text-xs text-blue-200">Premium Quality</p>
+          </div>
+          <div class="text-center glassmorphism p-6 rounded-2xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2">
+            <i data-feather="globe" class="w-8 h-8 mx-auto mb-3 text-gold-400"></i>
+            <h4 class="font-semibold text-sm mb-1">Global Reach</h4>
+            <p class="text-xs text-blue-200">Worldwide Shipping</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Products Preview Section -->
+    <section class="py-20 px-4" id="products">
+      <div class="max-w-6xl mx-auto">
+        <div class="text-center mb-16">
+          <h3 class="serif-font text-3xl lg:text-5xl mb-4">Our Premium Collection</h3>
+          <p class="text-blue-200 text-lg max-w-3xl mx-auto">From traditional handwoven fabrics to contemporary designer textiles, explore our diverse range of premium quality materials.</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div class="glassmorphism rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <div class="h-48 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
+              <i data-feather="layers" class="w-16 h-16 text-white"></i>
+            </div>
+            <div class="p-6">
+              <h4 class="serif-font text-xl mb-2">Cotton Collection</h4>
+              <p class="text-blue-200 text-sm mb-4">Premium quality cotton fabrics for all your needs</p>
+              <button class="text-blue-300 hover:text-white transition-colors text-sm font-medium flex items-center space-x-1">
+                <span>Learn More</span>
+                <i data-feather="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+          <div class="glassmorphism rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <div class="h-48 bg-gradient-to-br from-green-600 to-teal-600 flex items-center justify-center">
+              <i data-feather="hexagon" class="w-16 h-16 text-white"></i>
+            </div>
+            <div class="p-6">
+              <h4 class="serif-font text-xl mb-2">Silk Varieties</h4>
+              <p class="text-blue-200 text-sm mb-4">Luxurious silk fabrics with exquisite designs</p>
+              <button class="text-blue-300 hover:text-white transition-colors text-sm font-medium flex items-center space-x-1">
+                <span>Learn More</span>
+                <i data-feather="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+          <div class="glassmorphism rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
+            <div class="h-48 bg-gradient-to-br from-orange-600 to-red-600 flex items-center justify-center">
+              <i data-feather="grid" class="w-16 h-16 text-white"></i>
+            </div>
+            <div class="p-6">
+              <h4 class="serif-font text-xl mb-2">Blended Fabrics</h4>
+              <p class="text-blue-200 text-sm mb-4">Modern blends combining comfort and durability</p>
+              <button class="text-blue-300 hover:text-white transition-colors text-sm font-medium flex items-center space-x-1">
+                <span>Learn More</span>
+                <i data-feather="arrow-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="glassmorphism mt-20" id="contact">
+      <div class="max-w-6xl mx-auto px-6 py-12">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          <div>
+            <div class="flex items-center space-x-3 mb-4">
+              <div class="bg-white text-blue-900 font-bold rounded-lg w-10 h-10 flex items-center justify-center">
+                <span class="serif-font">SB</span>
+              </div>
+              <div>
+                <h3 class="serif-font text-lg">Shree Brahmanikrupa</h3>
+                <p class="text-xs tracking-wide text-blue-200">TEXTILE</p>
+              </div>
+            </div>
+            <p class="text-sm text-blue-200 leading-relaxed mb-6">
+              Crafting premium textiles with heritage and innovation since 1985. Your trusted partner for quality fabrics.
+            </p>
+            <div class="flex space-x-4">
+              <a href="#" class="glassmorphism p-2 rounded-lg hover:bg-white/10 transition-colors">
+                <i data-feather="instagram" class="w-5 h-5"></i>
+              </a>
+              <a href="#" class="glassmorphism p-2 rounded-lg hover:bg-white/10 transition-colors">
+                <i data-feather="linkedin" class="w-5 h-5"></i>
+              </a>
+              <a href="#" class="glassmorphism p-2 rounded-lg hover:bg-white/10 transition-colors">
+                <i data-feather="facebook" class="w-5 h-5"></i>
+              </a>
+            </div>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Quick Links</h4>
+            <ul class="space-y-2 text-sm text-blue-200">
+              <li><a href="#about" class="hover:text-white transition-colors">About Us</a></li>
+              <li><a href="#products" class="hover:text-white transition-colors">Our Products</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Quality Standards</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Bulk Orders</a></li>
+              <li><a href="#" class="hover:text-white transition-colors">Sustainability</a></li>
+            </ul>
+          </div>
+          <div>
+            <h4 class="font-semibold mb-4">Contact Info</h4>
+            <div class="space-y-3 text-sm text-blue-200">
+              <div class="flex items-center space-x-2">
+                <i data-feather="map-pin" class="w-4 h-4 text-gold-400"></i>
+                <span>Textile District, Gujarat, India</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <i data-feather="phone" class="w-4 h-4 text-gold-400"></i>
+                <span>+91 98765 43210</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <i data-feather="mail" class="w-4 h-4 text-gold-400"></i>
+                <span>info@brahmanikrupa.com</span>
+              </div>
+              <div class="flex items-center space-x-2">
+                <i data-feather="clock" class="w-4 h-4 text-gold-400"></i>
+                <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="border-t border-white/10 mt-8 pt-8 text-center">
+          <p class="text-sm text-blue-200">
+            © 2025 Shree Brahmanikrupa Textile. All rights reserved. | Designed with ❤️ for premium textiles
+          </p>
+        </div>
+      </div>
+    </footer>
+
+    <script>
+      // Initialize Feather icons
+      feather.replace();
+      
+      // Mobile menu toggle
+      function toggleMobileMenu() {
+        const menu = document.getElementById('mobile-menu');
+        menu.classList.toggle('hidden');
+      }
+      
+      // Smooth scrolling for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute('href'));
+          if (target) {
+            target.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start'
+            });
+          }
+          // Close mobile menu after clicking a link
+          const mobileMenu = document.getElementById('mobile-menu');
+          if (!mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+          }
+        });
+      });
+
+      // Add scroll effect to navbar
+      window.addEventListener('scroll', function() {
+        const header = document.querySelector('header');
+        if (window.scrollY > 100) {
+          header.style.background = 'rgba(255, 255, 255, 0.08)';
+        } else {
+          header.style.background = 'rgba(255, 255, 255, 0.05)';
+        }
+      });
+    </script>
   </body>
 </html>
