@@ -1,401 +1,1264 @@
+<!-- PixelOS Pro – Advanced Retro Web OS (single-file) -->
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Shree Brahmanikrupa Textile - Premium Fabrics & Textiles</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-    <link href="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.css" rel="stylesheet" />
-    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
-    <style>
-      .serif-font {
-        font-family: 'DM Serif Display', serif;
-      }
-      .sans-font {
-        font-family: 'Inter', sans-serif;
-      }
-      .textile-pattern {
-        background-image: 
-          radial-gradient(circle at 25% 25%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
-          radial-gradient(circle at 75% 75%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
-          repeating-linear-gradient(
-            45deg,
-            rgba(255, 255, 255, 0.01) 0px,
-            rgba(255, 255, 255, 0.01) 1px,
-            transparent 1px,
-            transparent 60px
-          ),
-          repeating-linear-gradient(
-            -45deg,
-            rgba(255, 255, 255, 0.005) 0px,
-            rgba(255, 255, 255, 0.005) 1px,
-            transparent 1px,
-            transparent 60px
-          );
-      }
-      .glassmorphism {
-        background: rgba(255, 255, 255, 0.05);
-        backdrop-filter: blur(10px);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-      }
-      .fade-in {
-        animation: fadeInUp 1s ease-out forwards;
-        opacity: 0;
-        transform: translateY(30px);
-      }
-      .fade-in-delay-1 {
-        animation-delay: 0.2s;
-      }
-      .fade-in-delay-2 {
-        animation-delay: 0.4s;
-      }
-      .fade-in-delay-3 {
-        animation-delay: 0.6s;
-      }
-      @keyframes fadeInUp {
-        to {
-          opacity: 1;
-          transform: translateY(0);
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>PixelOS Pro — Advanced Retro Web OS</title>
+  <style>
+    /* ---- Theme & base ---- */
+    :root{
+      --font: "Press Start 2P", "Courier New", monospace;
+      --bg:#0d1117;
+      --teal-desktop:#008080;
+      --teal-pattern:#005a5a;
+      --window-bg:#c0c0c0;
+      --win-border-light:#ffffff;
+      --win-border-dark:#555555;
+      --title-bar:#000080;
+      --title-bar-inactive:#808080;
+      --text:#000000;
+      --text-inv:#ffffff;
+      --glow: rgba(77,192,248,0.7);
+      --fs-font-size:0.8rem;
+    }
+    html,body{height:100%;margin:0}
+    body{
+      font-family:var(--font);
+      background:var(--bg);
+      color:var(--text);
+      overflow:hidden;
+      user-select:none;
+      font-size:var(--fs-font-size);
+    }
+    body.theme-dark{
+      --teal-desktop:#2a2a2a;
+      --teal-pattern:#1a1a1a;
+      --window-bg:#3c3c3c;
+      --win-border-light:#6a6a6a;
+      --win-border-dark:#1a1a1a;
+      --title-bar:#002a5a;
+      --title-bar-inactive:#4a4a4a;
+      --text:#e0e0e0;
+      --text-inv:#000;
+    }
+    body.theme-light{
+      --teal-desktop:#add8e6;
+      --teal-pattern:#87ceeb;
+      --window-bg:#f0f0f0;
+      --win-border-light:#ffffff;
+      --win-border-dark:#888888;
+      --title-bar:#3b5998;
+      --title-bar-inactive:#a9a9a9;
+      --text:#000;
+      --text-inv:#fff;
+    }
+    body.animations-disabled {
+        /* disable animations normally */
+        * {
+          transition: none !important;
+          animation: none !important;
         }
       }
-      .hero-overlay {
-        background: linear-gradient(135deg, rgba(31, 41, 55, 0.8) 0%, rgba(55, 65, 81, 0.6) 100%);
+      
+      /* Apply when user prefers reduced motion */
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          transition: none !important;
+          animation: none !important;
+        }
       }
-      .btn-primary {
-        background: linear-gradient(135deg, #1e40af 0%, #3730a3 100%);
-        box-shadow: 0 10px 25px rgba(30, 64, 175, 0.3);
+    /* ---- Boot screens ---- */
+    #boot-screen, #shutdown-screen {
+      position:fixed; inset:0; display:flex; flex-direction:column; justify-content:space-between;
+      background:#000; color:#0f0; padding:20px; box-sizing:border-box; z-index:99999;
+      font-size:0.95rem;
+    }
+    #boot-log{height:calc(100% - 40px); overflow:auto; font-family:monospace;}
+    #skip-boot-prompt{color:#ff0; text-align:center; margin-top:6px; animation:blink 1.5s step-end infinite}
+    @keyframes blink{50%{opacity:0}}
+
+    /* ---- Desktop ---- */
+    #screen{
+      position:fixed; inset:0; display:none; background:var(--teal-desktop);
+      background-image:
+        linear-gradient(45deg,var(--teal-pattern) 25%,transparent 25%),
+        linear-gradient(-45deg,var(--teal-pattern) 25%,transparent 25%),
+        linear-gradient(45deg,transparent 75%,var(--teal-pattern) 75%),
+        linear-gradient(-45deg,transparent 75%,var(--teal-pattern) 75%);
+      background-size:20px 20px;
+      padding:12px; box-sizing:border-box;
+    }
+    #desktop-icons{display:flex; gap:10px; align-items:flex-start; flex-wrap:wrap}
+
+    .desktop-icon{
+      width:110px; padding:8px; text-align:center; cursor:pointer; color:var(--text-inv);
+      border:1px solid transparent; user-select:none; background:transparent;
+    }
+    .desktop-icon:focus-visible, .desktop-icon:hover{
+      outline:none; background:rgba(255,255,255,0.08); border:1px dashed #fff;
+    }
+    .desktop-icon-svg{width:48px;height:48px;margin:0 auto 6px; pointer-events:none}
+    .desktop-icon span{display:block; font-size:0.7rem; color:var(--text-inv)}
+
+    /* ---- Window ---- */
+    .window{
+      position:absolute; background:var(--window-bg);
+      border:2px outset var(--win-border-light);
+      min-width:280px; min-height:180px; display:flex; flex-direction:column; overflow:hidden;
+      box-shadow:5px 5px 12px rgba(0,0,0,0.6);
+    }
+    .window.active{box-shadow:0 0 20px var(--glow); z-index:1000}
+    .window.maximized{top:0!important;left:0!important;width:100%!important;height:calc(100% - 40px)!important;border-radius:0}
+    .title-bar{display:flex; align-items:center; justify-content:space-between; padding:4px; cursor:grab; background:var(--title-bar-inactive); color:var(--text-inv); flex-shrink:0}
+    .window.active .title-bar{background:var(--title-bar)}
+    .title-bar-text{display:flex; align-items:center; gap:6px; white-space:nowrap; overflow:hidden}
+    .title-bar-controls{display:flex; gap:4px}
+    .title-bar-button{width:20px;height:20px; border:1px outset var(--win-border-light); background:var(--window-bg); cursor:pointer; font-weight:bold; color:var(--text)}
+    .title-bar-button:active{border-style:inset}
+    .window-content{padding:8px; background:var(--win-border-light); margin:4px; border:1px inset var(--win-border-dark); overflow:auto; display:flex; flex-direction:column; gap:8px}
+
+    .resizer{width:16px;height:16px;position:absolute;right:0;bottom:0;cursor:se-resize}
+
+    /* ---- Taskbar & Start ---- */
+    #taskbar{position:fixed; left:0; right:0; bottom:0; height:40px; display:flex; align-items:center; gap:6px; padding:4px; background:var(--window-bg); border-top:2px solid var(--win-border-light); z-index:99999}
+    .taskbar-left{display:flex; gap:6px; align-items:center}
+    .taskbar-button{padding:6px 10px; border:2px outset var(--win-border-light); background:var(--window-bg); cursor:pointer; font-size:0.75rem; display:flex; align-items:center; gap:6px; max-width:220px; overflow:hidden; text-overflow:ellipsis}
+    .taskbar-button.active{border-style:inset}
+    #clock{margin-left:auto; padding:6px 8px; border:1px inset var(--win-border-dark); font-size:0.75rem}
+
+    #start-menu{position:fixed; bottom:40px; left:4px; display:none; flex-direction:column; gap:6px; padding:6px; border:2px outset var(--win-border-light); background:var(--window-bg); z-index:100000}
+
+    /* ---- HUD/Toast ---- */
+    #hud-indicator{position:fixed; top:10px; right:10px; width:10px; height:10px; border-radius:50%; border:1px solid #fff; background:#f00; z-index:20000}
+    #hud-indicator.beat{background:#0f0}
+    #toast-container{position:fixed; bottom:50px; right:10px; display:flex; flex-direction:column; gap:6px; z-index:20000}
+    .toast{padding:8px; background:var(--title-bar); color:var(--text-inv); border:2px outset var(--win-border-light); font-size:0.75rem; animation:toastfade 5s forwards}
+    @keyframes toastfade{0%,100%{opacity:0}10%,90%{opacity:1}}
+
+    /* ---- App styles ---- */
+    .app-container{display:flex;flex-direction:column;height:100%}
+    .app-toolbar{padding:4px;border-bottom:2px inset var(--win-border-dark);display:flex;justify-content:space-between;align-items:center}
+    .app-main{flex:1;overflow:auto;padding:6px;display:flex;flex-direction:column;gap:6px}
+    table{width:100%;border-collapse:collapse;font-size:0.75rem}
+    th,td{padding:4px;border:1px solid var(--win-border-dark);text-align:left}
+    .file-explorer{display:flex;gap:8px;height:100%}
+    .file-tree{width:160px;border-right:2px inset var(--win-border-dark);padding-right:6px;overflow:auto}
+    .file-list{flex:1;padding-left:6px;overflow:auto}
+    .terminal{background:#000;color:#0f0;padding:8px;font-family:monospace;height:100%;display:flex;flex-direction:column}
+    .terminal-output{flex:1;overflow:auto;white-space:pre-wrap}
+    .terminal-input{display:flex;gap:6px;align-items:center}
+    .terminal-input input{flex:1;background:transparent;border:none;color:inherit;outline:none;font-family:monospace}
+    .sparkline{width:60px;height:16px}
+  </style>
+</head>
+<body>
+  <!-- Boot & shutdown -->
+  <div id="boot-screen" role="status" aria-live="polite">
+    <div id="boot-log" aria-hidden="false"></div>
+    <div style="text-align:center">
+      <button id="skip-boot-button" style="padding:8px;margin-bottom:6px">Skip</button>
+      <div id="skip-boot-prompt">Press Enter to Skip Boot</div>
+    </div>
+  </div>
+  <div id="shutdown-screen" style="display:none;align-items:center;justify-content:center;flex-direction:column;color:#fff;background:#000080">
+    <h2>PixelOS Pro — Shutdown Complete</h2>
+    <p>It is now safe to turn off your computer.</p>
+  </div>
+
+  <!-- Desktop -->
+  <main id="screen" aria-label="PixelOS Desktop">
+    <div id="desktop-icons"></div>
+    <div id="taskbar">
+      <div class="taskbar-left">
+        <button id="start-button" class="taskbar-button" aria-haspopup="true" aria-expanded="false">Start</button>
+        <div id="tasks-container" style="display:flex;gap:6px"></div>
+      </div>
+      <div id="clock" aria-live="polite"></div>
+    </div>
+    <div id="start-menu" role="menu">
+      <button role="menuitem" data-action="open-app" data-appid="logviewer">OS Logs</button>
+      <button role="menuitem" data-action="open-app" data-appid="settings">Settings</button>
+      <button role="menuitem" data-action="shutdown">Shutdown</button>
+    </div>
+    <div id="hud-indicator" aria-hidden="true"></div>
+    <div id="toast-container" aria-live="polite" aria-atomic="false"></div>
+  </main>
+
+  <script>
+  /* PixelOS Pro — single-file advanced web OS
+     - This file contains Kernel, Scheduler, ProcessManager, IPC, FS, Services, UI and Apps
+     - It is intentionally modular (namespaced objects & classes)
+  */
+
+  (function () {
+    "use strict";
+
+    /* ---------------------------
+       Kernel & Core (namespaces)
+       --------------------------- */
+    const Kernel = {
+      tickSpeed: 100, // main loop tick (ms)
+      scheduler: null,
+      processManager: null,
+      ipc: null,
+      fs: null,
+      services: null,
+      ui: null,
+      _mainLoopId: null,
+
+      logQueue: [],
+
+      async boot() {
+        // Create processManager first (so processes can be tracked)
+        this.processManager = new ProcessManager();
+        // IPC depends on process manager to route messages if needed
+        this.ipc = new IPC(this.processManager);
+        // Scheduler next
+        this.scheduler = new Scheduler(this.processManager);
+        // FileSystem (passes IPC optional)
+        this.fs = new FileSystem(this.ipc);
+        // Services registry (needs kernel)
+        this.services = new ServiceRegistry(this);
+
+        // safe logging now
+        this.log("Kernel", "Booting PixelOS Pro...");
+
+        // init FS -> then register services and start main loop
+        await this.fs.init();
+        this.services.registerAll();
+        this.services.startAll();
+
+        this.log("Kernel", "Core systems initialized. Starting main loop.");
+        // start scheduler main loop
+        this._mainLoopId = setInterval(() => this.tick(), this.tickSpeed);
+      },
+
+      tick() {
+        try {
+          this.scheduler.run();      // schedule a slice
+          this.services.tick();      // let daemons run periodic logic
+        } catch (err) {
+          console.error("Kernel tick error:", err);
+        }
+      },
+
+      // simplified syscall gateway for UI/apps
+      syscall(call, ...args) {
+        switch (call) {
+          case "process.create": return this.processManager.create(...args);
+          case "process.terminate": return this.processManager.terminate(...args);
+          case "process.get": return this.processManager.get(...args);
+          case "process.getAll": return this.processManager.getAll();
+          case "process.setState": return this.processManager.setState(...args);
+          case "scheduler.setPriority": return this.scheduler.setPriority(...args);
+          case "fs.read": return this.fs.read(...args);
+          case "fs.write": return this.fs.write(...args);
+          case "fs.list": return this.fs.list(...args);
+          case "fs.mkdir": return this.fs.mkdir(...args);
+          case "fs.exists": return this.fs.exists(...args);
+          case "ipc.pub": return this.ipc.pub(...args);
+          case "ipc.sub": return this.ipc.sub(...args);
+          case "ipc.send": return this.ipc.send(...args);
+          default:
+            this.log("Kernel", `Unknown syscall: ${call}`, "error");
+            return null;
+        }
+      },
+
+      log(source, message, level = "info") {
+        // push into ipc topic for UI viewers
+        const logEntry = { source, message, level, ts: new Date() };
+        console.log(`[${source}] ${message}`);
+        // safely publish (ipc exists)
+        if (this.ipc) this.ipc.pub("kernel.log", logEntry);
+        else this.logQueue.push(logEntry);
+      },
+
+      async shutdown() {
+        this.log("Kernel", "Shutdown initiated.");
+        clearInterval(this._mainLoopId);
+        this.services.stopAll();
+        await this.fs.persist();
+        return Promise.resolve();
       }
-      .btn-secondary {
-        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    };
+
+    /* ---------------------------
+       Scheduler (preemptive-ish simulation)
+       --------------------------- */
+    class Scheduler {
+      constructor(processManager) {
+        this.pm = processManager;
+        this.queues = { HIGH: [], NORMAL: [], LOW: [] };
+        this.timeSliceTicks = 1; // in kernel ticks (each run() simulates 1 timeslice)
+        this.agingCounter = 0;
+        this.agingThreshold = 300; // ticks before promoting to avoid starvation
       }
-      .floating-animation {
-        animation: floating 3s ease-in-out infinite;
+
+      add(proc) {
+        if (!proc || !proc.priority) return;
+        const q = this.queues[proc.priority] || this.queues.NORMAL;
+        q.push(proc);
       }
-      @keyframes floating {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-10px); }
+
+      run() {
+        // pick next ready process from highest priority
+        const proc = this._getNextProcess();
+        if (!proc) return;
+        if (proc.state === "NEW") proc.state = "READY";
+
+        if (proc.state === "READY") {
+          proc.state = "RUNNING";
+          // simulate running for one timeslice: increment runTicks
+          proc.cpuUsage.runTicks++;
+          // after one slice, place it back to READY at proper queue end
+          proc.state = "READY";
+          // move to end of its queue to implement round-robin
+          this._requeue(proc);
+        }
+
+        // global bookkeeping
+        this.pm.getAll().forEach((p) => {
+          p.cpuUsage.totalTicks++;
+          p.cpuUsage.history.push(p.state === "RUNNING" ? 1 : 0);
+          if (p.cpuUsage.history.length > 60) p.cpuUsage.history.shift();
+        });
+
+        this._handleAging();
       }
-    </style>
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              primary: {
-                50: '#eff6ff',
-                100: '#dbeafe',
-                500: '#3b82f6',
-                600: '#2563eb',
-                700: '#1d4ed8',
-                900: '#1e3a8a'
-              },
-              gold: {
-                400: '#fbbf24',
-                500: '#f59e0b'
-              }
-            }
+
+      _getNextProcess() {
+        if (this.queues.HIGH.length) return this.queues.HIGH.shift();
+        if (this.queues.NORMAL.length) return this.queues.NORMAL.shift();
+        if (this.queues.LOW.length) return this.queues.LOW.shift();
+        return null;
+      }
+
+      _requeue(proc) {
+        (this.queues[proc.priority] || this.queues.NORMAL).push(proc);
+      }
+
+      _handleAging() {
+        this.agingCounter++;
+        if (this.agingCounter >= this.agingThreshold) {
+          this.agingCounter = 0;
+          const low = this.queues.LOW.shift();
+          if (low) {
+            low.priority = "NORMAL";
+            this.queues.NORMAL.push(low);
+            Kernel.log("Scheduler", `Aging: Promoted PID ${low.pid} to NORMAL`);
           }
         }
       }
-    </script>
-  </head>
-  <body class="sans-font bg-gradient-to-br from-slate-900 via-blue-900 to-indigo-900 text-white textile-pattern min-h-screen">
-    <!-- Navbar -->
-    <header class="fixed top-0 w-full z-50 glassmorphism">
-      <div class="max-w-7xl mx-auto flex justify-between items-center px-6 lg:px-8 py-4">
-        <div class="flex items-center space-x-4">
-          <div class="bg-gradient-to-br from-white to-blue-50 text-blue-900 font-bold rounded-xl w-12 h-12 flex items-center justify-center shadow-lg floating-animation">
-            <span class="serif-font text-lg">SB</span>
-          </div>
-          <div>
-            <h1 class="serif-font text-xl lg:text-2xl font-normal">Shree Brahmanikrupa</h1>
-            <p class="text-xs lg:text-sm tracking-[0.2em] text-blue-200 font-medium">TEXTILE</p>
-          </div>
-        </div>
-        <nav class="hidden md:flex items-center space-x-8">
-          <a href="#about" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors duration-300">
-            <i data-feather="info" class="w-4 h-4"></i>
-            <span>ABOUT</span>
-          </a>
-          <a href="#products" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors duration-300">
-            <i data-feather="grid" class="w-4 h-4"></i>
-            <span>PRODUCTS</span>
-          </a>
-          <a href="#contact" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors duration-300">
-            <i data-feather="mail" class="w-4 h-4"></i>
-            <span>CONTACT</span>
-          </a>
-          <div class="flex items-center space-x-4 ml-6">
-            <a href="#" class="text-blue-300 hover:text-white transition-colors">
-              <i data-feather="instagram" class="w-5 h-5"></i>
-            </a>
-            <a href="#" class="text-blue-300 hover:text-white transition-colors">
-              <i data-feather="linkedin" class="w-5 h-5"></i>
-            </a>
-          </div>
-        </nav>
-        <!-- Mobile menu button -->
-        <button class="md:hidden text-white" onclick="toggleMobileMenu()">
-          <i data-feather="menu" class="w-6 h-6"></i>
-        </button>
-      </div>
-      <!-- Mobile menu -->
-      <div id="mobile-menu" class="hidden md:hidden glassmorphism border-t border-white/10">
-        <div class="px-6 py-4 space-y-4">
-          <a href="#about" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors">
-            <i data-feather="info" class="w-4 h-4"></i>
-            <span>ABOUT</span>
-          </a>
-          <a href="#products" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors">
-            <i data-feather="grid" class="w-4 h-4"></i>
-            <span>PRODUCTS</span>
-          </a>
-          <a href="#contact" class="flex items-center space-x-2 text-sm font-medium hover:text-blue-300 transition-colors">
-            <i data-feather="mail" class="w-4 h-4"></i>
-            <span>CONTACT</span>
-          </a>
-          <div class="flex items-center space-x-4 pt-4 border-t border-white/10">
-            <a href="#" class="text-blue-300 hover:text-white transition-colors">
-              <i data-feather="instagram" class="w-5 h-5"></i>
-            </a>
-            <a href="#" class="text-blue-300 hover:text-white transition-colors">
-              <i data-feather="linkedin" class="w-5 h-5"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-    </header>
 
-    <!-- Hero Section -->
-    <section class="relative min-h-screen flex items-center justify-center px-4 pt-24">
-      <div class="absolute inset-0 hero-overlay"></div>
-      <!-- Background textile pattern overlay -->
-      <div class="absolute inset-0 opacity-5">
-        <div class="absolute top-20 left-10 w-32 h-32 border border-white/20 rounded-full"></div>
-        <div class="absolute top-40 right-20 w-24 h-24 border border-white/20 rounded-full"></div>
-        <div class="absolute bottom-40 left-20 w-40 h-40 border border-white/20 rounded-full"></div>
-      </div>
-      <div class="relative text-center max-w-4xl mx-auto">
-        <div class="fade-in inline-block glassmorphism px-8 py-3 rounded-full text-sm tracking-[0.3em] font-medium mb-8">
-          <i data-feather="star" class="w-4 h-4 inline mr-2"></i>
-          WELCOME TO EXCELLENCE
-        </div>
-        <h2 class="fade-in fade-in-delay-1 serif-font text-4xl lg:text-7xl font-normal mb-4 leading-tight">
-          Shree Brahmanikrupa
-        </h2>
-        <h3 class="fade-in fade-in-delay-1 serif-font text-2xl lg:text-4xl font-normal text-blue-200 mb-8 italic">
-          Textile
-        </h3>
-        <p class="fade-in fade-in-delay-2 max-w-2xl mx-auto text-lg lg:text-xl text-blue-100 mb-12 leading-relaxed font-light">
-          Where heritage craftsmanship meets contemporary elegance. Discover our exquisite collection of premium fabrics that weave stories of tradition and innovation.
-        </p>
-        <div class="fade-in fade-in-delay-3 flex flex-col sm:flex-row gap-6 justify-center items-center">
-          <a href="#products" class="btn-secondary text-blue-900 font-semibold px-8 py-4 rounded-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-2">
-            <i data-feather="eye" class="w-5 h-5"></i>
-            <span>Explore Collection</span>
-          </a>
-          <a href="#contact" class="btn-primary text-white font-semibold px-8 py-4 rounded-xl hover:shadow-2xl transform hover:-translate-y-1 transition-all duration-300 flex items-center space-x-2">
-            <i data-feather="phone" class="w-5 h-5"></i>
-            <span>Get In Touch</span>
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- Trust Badges Section -->
-    <section class="py-16 px-4" id="about">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-12">
-          <h3 class="serif-font text-3xl lg:text-4xl mb-4">Why Choose Us</h3>
-          <p class="text-blue-200 max-w-2xl mx-auto">Our commitment to quality and excellence has made us a trusted name in the textile industry for decades.</p>
-        </div>
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-8">
-          <div class="text-center glassmorphism p-6 rounded-2xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2">
-            <i data-feather="award" class="w-8 h-8 mx-auto mb-3 text-gold-400"></i>
-            <h4 class="font-semibold text-sm mb-1">ISO Certified</h4>
-            <p class="text-xs text-blue-200">Quality Assured</p>
-          </div>
-          <div class="text-center glassmorphism p-6 rounded-2xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2">
-            <i data-feather="calendar" class="w-8 h-8 mx-auto mb-3 text-gold-400"></i>
-            <h4 class="font-semibold text-sm mb-1">Est. 1985</h4>
-            <p class="text-xs text-blue-200">40+ Years Legacy</p>
-          </div>
-          <div class="text-center glassmorphism p-6 rounded-2xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2">
-            <i data-feather="check-circle" class="w-8 h-8 mx-auto mb-3 text-gold-400"></i>
-            <h4 class="font-semibold text-sm mb-1">100% Cotton</h4>
-            <p class="text-xs text-blue-200">Premium Quality</p>
-          </div>
-          <div class="text-center glassmorphism p-6 rounded-2xl hover:bg-white/10 transition-all duration-300 transform hover:-translate-y-2">
-            <i data-feather="globe" class="w-8 h-8 mx-auto mb-3 text-gold-400"></i>
-            <h4 class="font-semibold text-sm mb-1">Global Reach</h4>
-            <p class="text-xs text-blue-200">Worldwide Shipping</p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Products Preview Section -->
-    <section class="py-20 px-4" id="products">
-      <div class="max-w-6xl mx-auto">
-        <div class="text-center mb-16">
-          <h3 class="serif-font text-3xl lg:text-5xl mb-4">Our Premium Collection</h3>
-          <p class="text-blue-200 text-lg max-w-3xl mx-auto">From traditional handwoven fabrics to contemporary designer textiles, explore our diverse range of premium quality materials.</p>
-        </div>
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div class="glassmorphism rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-            <div class="h-48 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-              <i data-feather="layers" class="w-16 h-16 text-white"></i>
-            </div>
-            <div class="p-6">
-              <h4 class="serif-font text-xl mb-2">Cotton Collection</h4>
-              <p class="text-blue-200 text-sm mb-4">Premium quality cotton fabrics for all your needs</p>
-              <button class="text-blue-300 hover:text-white transition-colors text-sm font-medium flex items-center space-x-1">
-                <span>Learn More</span>
-                <i data-feather="arrow-right" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
-          <div class="glassmorphism rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-            <div class="h-48 bg-gradient-to-br from-green-600 to-teal-600 flex items-center justify-center">
-              <i data-feather="hexagon" class="w-16 h-16 text-white"></i>
-            </div>
-            <div class="p-6">
-              <h4 class="serif-font text-xl mb-2">Silk Varieties</h4>
-              <p class="text-blue-200 text-sm mb-4">Luxurious silk fabrics with exquisite designs</p>
-              <button class="text-blue-300 hover:text-white transition-colors text-sm font-medium flex items-center space-x-1">
-                <span>Learn More</span>
-                <i data-feather="arrow-right" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
-          <div class="glassmorphism rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2">
-            <div class="h-48 bg-gradient-to-br from-orange-600 to-red-600 flex items-center justify-center">
-              <i data-feather="grid" class="w-16 h-16 text-white"></i>
-            </div>
-            <div class="p-6">
-              <h4 class="serif-font text-xl mb-2">Blended Fabrics</h4>
-              <p class="text-blue-200 text-sm mb-4">Modern blends combining comfort and durability</p>
-              <button class="text-blue-300 hover:text-white transition-colors text-sm font-medium flex items-center space-x-1">
-                <span>Learn More</span>
-                <i data-feather="arrow-right" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer -->
-    <footer class="glassmorphism mt-20" id="contact">
-      <div class="max-w-6xl mx-auto px-6 py-12">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          <div>
-            <div class="flex items-center space-x-3 mb-4">
-              <div class="bg-white text-blue-900 font-bold rounded-lg w-10 h-10 flex items-center justify-center">
-                <span class="serif-font">SB</span>
-              </div>
-              <div>
-                <h3 class="serif-font text-lg">Shree Brahmanikrupa</h3>
-                <p class="text-xs tracking-wide text-blue-200">TEXTILE</p>
-              </div>
-            </div>
-            <p class="text-sm text-blue-200 leading-relaxed mb-6">
-              Crafting premium textiles with heritage and innovation since 1985. Your trusted partner for quality fabrics.
-            </p>
-            <div class="flex space-x-4">
-              <a href="#" class="glassmorphism p-2 rounded-lg hover:bg-white/10 transition-colors">
-                <i data-feather="instagram" class="w-5 h-5"></i>
-              </a>
-              <a href="#" class="glassmorphism p-2 rounded-lg hover:bg-white/10 transition-colors">
-                <i data-feather="linkedin" class="w-5 h-5"></i>
-              </a>
-              <a href="#" class="glassmorphism p-2 rounded-lg hover:bg-white/10 transition-colors">
-                <i data-feather="facebook" class="w-5 h-5"></i>
-              </a>
-            </div>
-          </div>
-          <div>
-            <h4 class="font-semibold mb-4">Quick Links</h4>
-            <ul class="space-y-2 text-sm text-blue-200">
-              <li><a href="#about" class="hover:text-white transition-colors">About Us</a></li>
-              <li><a href="#products" class="hover:text-white transition-colors">Our Products</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Quality Standards</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Bulk Orders</a></li>
-              <li><a href="#" class="hover:text-white transition-colors">Sustainability</a></li>
-            </ul>
-          </div>
-          <div>
-            <h4 class="font-semibold mb-4">Contact Info</h4>
-            <div class="space-y-3 text-sm text-blue-200">
-              <div class="flex items-center space-x-2">
-                <i data-feather="map-pin" class="w-4 h-4 text-gold-400"></i>
-                <span>Textile District, Gujarat, India</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i data-feather="phone" class="w-4 h-4 text-gold-400"></i>
-                <span>+91 98765 43210</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i data-feather="mail" class="w-4 h-4 text-gold-400"></i>
-                <span>info@brahmanikrupa.com</span>
-              </div>
-              <div class="flex items-center space-x-2">
-                <i data-feather="clock" class="w-4 h-4 text-gold-400"></i>
-                <span>Mon - Sat: 9:00 AM - 6:00 PM</span>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="border-t border-white/10 mt-8 pt-8 text-center">
-          <p class="text-sm text-blue-200">
-            © 2025 Shree Brahmanikrupa Textile. All rights reserved. | Designed with ❤️ for premium textiles
-          </p>
-        </div>
-      </div>
-    </footer>
-
-    <script>
-      // Initialize Feather icons
-      feather.replace();
-      
-      // Mobile menu toggle
-      function toggleMobileMenu() {
-        const menu = document.getElementById('mobile-menu');
-        menu.classList.toggle('hidden');
+      setPriority(pid, priority) {
+        const proc = this.pm.get(pid);
+        if (!proc) return false;
+        // remove from all queues
+        Object.values(this.queues).forEach(q => {
+          const idx = q.findIndex(p => p.pid === pid);
+          if (idx > -1) q.splice(idx,1);
+        });
+        proc.priority = priority;
+        this.add(proc);
+        Kernel.log("Scheduler", `PID ${pid} set to ${priority}`);
+        return true;
       }
-      
-      // Smooth scrolling for anchor links
-      document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-          e.preventDefault();
-          const target = document.querySelector(this.getAttribute('href'));
-          if (target) {
-            target.scrollIntoView({
-              behavior: 'smooth',
-              block: 'start'
+    }
+
+    /* ---------------------------
+       Process Manager
+       --------------------------- */
+    class ProcessManager {
+      constructor() {
+        this.processes = new Map();
+        this.nextPID = 1000;
+      }
+
+      create(name = "proc", priority = "NORMAL") {
+        const pid = this.nextPID++;
+        const process = {
+          pid, name, priority,
+          state: "NEW",
+          memory: Math.floor(Math.random() * 41) + 10, // 10-50 MB
+          startTime: Date.now(),
+          cpuUsage: { runTicks: 0, totalTicks: 0, history: [] },
+          messageQueue: [],
+          subscriptions: []
+        };
+        this.processes.set(pid, process);
+        // Safely add to scheduler if present
+        try { Kernel.scheduler && Kernel.scheduler.add(process); } catch (e) {}
+        Kernel.log("ProcessManager", `Created PID ${pid} (${name})`);
+        return process;
+      }
+
+      terminate(pid) {
+        const proc = this.get(pid);
+        if (!proc) return false;
+        // unsubscribe handlers
+        proc.subscriptions.forEach(unsub => { try { unsub(); } catch(e){} });
+        this.processes.delete(pid);
+        Kernel.log("ProcessManager", `Terminated PID ${pid} (${proc.name})`);
+        return true;
+      }
+
+      get(pid) { return this.processes.get(pid); }
+      getAll() { return [...this.processes.values()]; }
+      setState(pid, state) {
+        const p = this.get(pid);
+        if (p) p.state = state;
+      }
+    }
+
+    /* ---------------------------
+       IPC (simple pub/sub + send)
+       --------------------------- */
+    class IPC {
+      constructor(pm) {
+        this.pm = pm;
+        this.topics = new Map();
+      }
+      pub(topic, payload) {
+        const handlers = this.topics.get(topic) || [];
+        handlers.forEach(h => { try { h(payload); } catch(e){console.error(e);} });
+      }
+      sub(topic, handler) {
+        if (!this.topics.has(topic)) this.topics.set(topic, []);
+        this.topics.get(topic).push(handler);
+        return () => {
+          const hlist = this.topics.get(topic);
+          const idx = hlist.indexOf(handler);
+          if (idx > -1) hlist.splice(idx,1);
+        };
+      }
+      send(pid, message) {
+        const p = this.pm.get(pid);
+        if (p) p.messageQueue.push(message);
+      }
+    }
+
+    /* ---------------------------
+       FileSystem (VFS) with persistence (IndexedDB w/ localStorage fallback)
+       --------------------------- */
+    class FileSystem {
+      constructor(ipc) {
+        this.vfs = {}; // path -> {path,type,content,modified}
+        this.db = null;
+        this.ipc = ipc;
+        this._persistTimeout = null;
+      }
+
+      async init() {
+        // attempt IndexedDB
+        try {
+          const req = indexedDB.open("PixelOS_FS", 1);
+          req.onupgradeneeded = e => {
+            e.target.result.createObjectStore("files", { keyPath: "path" });
+          };
+          this.db = await new Promise((res, rej) => {
+            req.onsuccess = () => res(req.result);
+            req.onerror = () => rej(req.error);
+          });
+          await this.load();
+        } catch (err) {
+          Kernel.log("FS", "IndexedDB not available, falling back to localStorage", "error");
+          await this.loadFromLocalStorage();
+        }
+      }
+
+      async load() {
+        if (!this.db) return this.loadFromLocalStorage();
+        return new Promise((resolve) => {
+          const tx = this.db.transaction("files", "readonly");
+          const store = tx.objectStore("files");
+          const req = store.getAll();
+          req.onsuccess = () => {
+            if (req.result && req.result.length) {
+              req.result.forEach(f => this.vfs[f.path] = f);
+              Kernel.log("FS", "Loaded VFS from IndexedDB");
+            } else {
+              this._createDefaults();
+            }
+            resolve();
+          };
+          req.onerror = () => { this._createDefaults(); resolve(); };
+        });
+      }
+
+      async loadFromLocalStorage() {
+        const saved = localStorage.getItem("pixelos.vfs");
+        if (saved) {
+          this.vfs = JSON.parse(saved);
+          Kernel.log("FS", "Loaded VFS from localStorage");
+        } else this._createDefaults();
+      }
+
+      _createDefaults() {
+        Kernel.log("FS", "Creating default VFS");
+        this.mkdir("/");
+        ["/games","/saves","/system","/tmp"].forEach(p => this.mkdir(p));
+        this.write("/system/readme.txt", "Welcome to PixelOS Pro!");
+        this.write("/games/AstroSmash.cart", "ASTRO_DATA");
+        this.write("/games/PixelQuest.cart", "PIXELQUEST_DATA");
+        this._queuePersist();
+      }
+
+      // Debounced persist
+      _queuePersist() {
+        if (this._persistTimeout) clearTimeout(this._persistTimeout);
+        this._persistTimeout = setTimeout(() => this.persist(), 500);
+      }
+
+      async persist() {
+        if (this.db) {
+          return new Promise((resolve) => {
+            const tx = this.db.transaction("files", "readwrite");
+            const store = tx.objectStore("files");
+            store.clear();
+            Object.values(this.vfs).forEach(file => store.put(file));
+            tx.oncomplete = () => {
+              Kernel.log("FS", "Persisted VFS to IndexedDB");
+              resolve();
+            };
+            tx.onerror = () => { localStorage.setItem("pixelos.vfs", JSON.stringify(this.vfs)); Kernel.log("FS","Persist fallback to localStorage","error"); resolve(); };
+          });
+        } else {
+          localStorage.setItem("pixelos.vfs", JSON.stringify(this.vfs));
+          Kernel.log("FS", "Persisted VFS to localStorage");
+        }
+      }
+
+      read(path) {
+        return this.vfs[path]?.content || "";
+      }
+
+      write(path, content) {
+        const now = Date.now();
+        const parent = path === "/" ? "/" : path.substring(0, path.lastIndexOf("/")) || "/";
+        if (!this.vfs[parent] || this.vfs[parent].type !== "folder") {
+          this.mkdir(parent);
+        }
+        this.vfs[path] = { path, content, type: "file", modified: now };
+        this._queuePersist();
+        return true;
+      }
+
+      list(path = "/") {
+        // Normalize
+        if (path !== "/" && path.endsWith("/")) path = path.slice(0,-1);
+        const keys = Object.keys(this.vfs);
+        if (path === "/") {
+          // immediate children of root (depth 2)
+          return keys.filter(p => p.split("/").length === 2);
+        }
+        const baseDepth = path === "/" ? 1 : path.split("/").length;
+        return keys.filter(p => p.startsWith(path + "/") && p.split("/").length === baseDepth + 1);
+      }
+
+      mkdir(path) {
+        const now = Date.now();
+        this.vfs[path] = { path, type: "folder", modified: now };
+        this._queuePersist();
+        return true;
+      }
+
+      exists(path) { return !!this.vfs[path]; }
+    }
+
+    /* ---------------------------
+       Services (daemons)
+       --------------------------- */
+    class ServiceRegistry {
+      constructor(kernel) {
+        this.kernel = kernel;
+        this.services = new Map();
+      }
+      registerAll() {
+        this.register("Watchdog", new WatchdogService(this.kernel));
+        this.register("NotificationCenter", new NotificationCenterService(this.kernel));
+        this.register("AudioMixer", new AudioMixerService(this.kernel));
+        this.register("SaveService", new SaveService(this.kernel));
+        this.register("NetworkSync", new NetworkSyncService(this.kernel));
+        this.register("AssetStreamer", new AssetStreamerService(this.kernel));
+      }
+      register(name, instance) { this.services.set(name, instance); }
+      startAll() { this.services.forEach(s => s.start()); }
+      stopAll() { this.services.forEach(s => s.stop()); }
+      tick() { this.services.forEach(s => s.tick()); }
+      get(name) { return this.services.get(name); }
+    }
+
+    class BaseService {
+      constructor(kernel, name, priority = "NORMAL") {
+        this.kernel = kernel; this.name = name; this.priority = priority;
+        this.process = null; this._running = false;
+      }
+      start() {
+        if (this._running) return;
+        this.process = this.kernel.processManager.create(`service:${this.name}`, this.priority);
+        this._running = true;
+        this.kernel.log("Services", `${this.name} started (PID ${this.process.pid})`);
+        if (this.onStart) this.onStart();
+      }
+      stop() {
+        if (!this._running) return;
+        if (this.onStop) this.onStop();
+        if (this.process) this.kernel.processManager.terminate(this.process.pid);
+        this._running = false;
+        this.kernel.log("Services", `${this.name} stopped`);
+      }
+      tick() { if (this.onTick) this.onTick(); }
+    }
+
+    class WatchdogService extends BaseService {
+      constructor(kernel) { super(kernel,"Watchdog","HIGH"); }
+      onTick() {
+        const zombies = Kernel.processManager.getAll().filter(p => p.state === "ZOMBIE");
+        zombies.forEach(z => {
+          Kernel.log("Watchdog", `Cleaning ZOMBIE PID ${z.pid}`);
+          Kernel.processManager.terminate(z.pid);
+        });
+      }
+    }
+
+    class NotificationCenterService extends BaseService {
+      constructor(kernel) { super(kernel,"NotificationCenter"); this.subs=[]; }
+      onStart() {
+        this.subs.push(this.kernel.ipc.sub("notify.show", payload => this.showToast(payload)));
+      }
+      onStop() { this.subs.forEach(u=>u()); this.subs=[]; }
+      showToast({message, type="info"}) {
+        const container = document.getElementById("toast-container");
+        if (!container) return;
+        const t = document.createElement("div");
+        t.className = "toast";
+        t.textContent = message;
+        container.appendChild(t);
+        setTimeout(()=> t.remove(), 4800);
+      }
+    }
+
+    class AudioMixerService extends BaseService {
+      constructor(kernel){ super(kernel,"AudioMixer","HIGH"); this._interval=null; }
+      onStart(){
+        const hud = document.getElementById("hud-indicator");
+        this._interval = setInterval(()=>{
+          this.kernel.ipc.pub("audio.beat",{ts:Date.now()});
+          if (hud) hud.classList.toggle("beat");
+        },500);
+      }
+      onStop(){ if (this._interval) { clearInterval(this._interval); this._interval=null; } }
+    }
+
+    class SaveService extends BaseService {
+      constructor(kernel){ super(kernel,"SaveService"); this._interval=null; }
+      onStart(){
+        this._interval = setInterval(()=> this.kernel.ipc.pub("autosave.tick",{}), 10000);
+      }
+      onStop(){ if(this._interval){ clearInterval(this._interval); this._interval=null; } }
+    }
+
+    class NetworkSyncService extends BaseService {
+      constructor(kernel){ super(kernel,"NetworkSync"); this.isOffline=false; }
+      onStart(){
+        this._sub = this.kernel.ipc.sub("net.toggle", ({offline})=>{
+          this.isOffline = offline;
+          this.kernel.ipc.pub("notify.show",{message:`Network ${offline ? "offline":"online"}`});
+        });
+      }
+      onStop(){ if(this._sub) this._sub(); }
+    }
+
+    class AssetStreamerService extends BaseService {
+      constructor(kernel){ super(kernel,"AssetStreamer"); }
+      onStart(){
+        this._sub = this.kernel.ipc.sub("asset.stream", ({path,dest}) => this.stream(path,dest));
+      }
+      onStop(){ if(this._sub) this._sub(); }
+      stream(path,dest){
+        const content = this.kernel.fs.read(path);
+        if (!content) { this.kernel.ipc.pub("notify.show",{message:`Asset not found: ${path}`}); return; }
+        let progress=0;
+        const interval = setInterval(()=>{
+          progress += 25;
+          this.kernel.ipc.pub("notify.show",{message:`Streaming ${path}: ${progress}%`});
+          if (progress >= 100) {
+            clearInterval(interval);
+            this.kernel.fs.write(dest, content);
+            this.kernel.ipc.pub("notify.show",{message:`Streamed ${path} → ${dest}`});
+          }
+        },500);
+      }
+    }
+
+    /* ---------------------------
+       UI: WindowManager & ThemeManager & UI glue
+       --------------------------- */
+    class WindowManager {
+      constructor(screenEl, taskbarEl, processManager) {
+        this.screen = screenEl;
+        this.taskbar = taskbarEl;
+        this.pm = processManager;
+        this.windows = new Map(); // pid -> entry
+        this.z = 500;
+      }
+
+      open(appDef, options = {}) {
+        // If appDef is key from APPS, use that
+        const app = appDef;
+        // If already open by name, focus
+        for (const [pid, entry] of this.windows) {
+          if (entry.appName === app.name) { this.focus(pid); return pid; }
+        }
+
+        // create a process
+        const proc = Kernel.syscall("process.create", app.name, options.priority || "NORMAL");
+        const pid = proc.pid;
+
+        // create window element
+        const win = document.createElement("div");
+        win.className = "window";
+        win.style.left = (50 + Math.random()*240) + "px";
+        win.style.top = (60 + Math.random()*120) + "px";
+        win.style.width = options.width || "520px";
+        win.style.height = options.height || "360px";
+        win.setAttribute("role","dialog");
+        win.setAttribute("aria-label", app.name);
+
+        // title bar
+        const titleBar = document.createElement("div");
+        titleBar.className = "title-bar";
+        titleBar.innerHTML = `<div class="title-bar-text">${app.icon || ""}<span>${app.name}</span></div>
+                              <div class="title-bar-controls">
+                                <button class="title-bar-button" data-act="min" title="Minimize">_</button>
+                                <button class="title-bar-button" data-act="max" title="Maximize">☐</button>
+                                <button class="title-bar-button" data-act="close" title="Close">x</button>
+                              </div>`;
+        win.appendChild(titleBar);
+
+        // content
+        const content = document.createElement("div");
+        content.className = "window-content";
+        win.appendChild(content);
+
+        // resizer
+        const resizer = document.createElement("div");
+        resizer.className = "resizer";
+        win.appendChild(resizer);
+
+        // append
+        this.screen.appendChild(win);
+
+        // initialize app content
+        const result = app.init ? app.init() : { el: document.createElement("div") };
+        const appEl = result.el || document.createElement("div");
+        content.appendChild(appEl);
+        const cleanup = result.cleanup || result.onClose || (()=>{});
+
+        // create taskbar button
+        const tbtn = document.createElement("button");
+        tbtn.className = "taskbar-button";
+        tbtn.textContent = app.name;
+        tbtn.dataset.pid = pid;
+        document.getElementById("tasks-container").appendChild(tbtn);
+
+        // store entry
+        this.windows.set(pid, { winEl: win, appName: app.name, cleanup, taskBtn: tbtn, minimized:false, lastRect:null });
+
+        // wire events
+        this._makeDraggable(win, titleBar);
+        this._makeResizable(win, resizer);
+
+        titleBar.addEventListener("click", (e) => {
+          const act = e.target.closest("[data-act]")?.dataset.act;
+          if (!act) return;
+          if (act === "close") this.close(pid);
+          if (act === "min") this.toggleMinimize(pid);
+          if (act === "max") this.maximize(pid);
+        });
+
+        tbtn.addEventListener("click", () => this.toggleMinimize(pid));
+        win.addEventListener("mousedown", ()=> this.focus(pid));
+
+        // focus newly opened window
+        this.focus(pid);
+        return pid;
+      }
+
+      focus(pid) {
+        const entry = this.windows.get(pid); if (!entry) return;
+        // deactivate others
+        for (const [,e] of this.windows) e.winEl.classList.remove("active");
+        entry.winEl.classList.add("active");
+        entry.winEl.style.zIndex = ++this.z;
+        // taskbar highlight
+        for (const [,e] of this.windows) e.taskBtn.classList.remove("active");
+        entry.taskBtn.classList.add("active");
+      }
+
+      close(pid) {
+        const entry = this.windows.get(pid);
+        if (!entry) return;
+        // cleanup app resources
+        try { entry.cleanup && entry.cleanup(); } catch(e) {}
+        entry.winEl.remove();
+        entry.taskBtn.remove();
+        Kernel.syscall("process.terminate", pid);
+        this.windows.delete(pid);
+      }
+
+      toggleMinimize(pid) {
+        const entry = this.windows.get(pid); if (!entry) return;
+        if (!entry.minimized) {
+          entry.winEl.style.display = "none";
+          entry.minimized = true;
+          entry.taskBtn.classList.remove("active");
+          const p = Kernel.syscall("process.get", pid);
+          if (p) p.state = "MINIMIZED";
+        } else {
+          entry.winEl.style.display = "flex";
+          entry.minimized = false;
+          this.focus(pid);
+          const p = Kernel.syscall("process.get", pid);
+          if (p) p.state = "READY";
+        }
+      }
+
+      maximize(pid) {
+        const entry = this.windows.get(pid); if (!entry) return;
+        const w = entry.winEl;
+        if (!w.classList.contains("maximized")) {
+          entry.lastRect = { left:w.style.left, top:w.style.top, width:w.style.width, height:w.style.height };
+          w.classList.add("maximized");
+        } else {
+          w.classList.remove("maximized");
+          if (entry.lastRect) {
+            w.style.left = entry.lastRect.left;
+            w.style.top = entry.lastRect.top;
+            w.style.width = entry.lastRect.width;
+            w.style.height = entry.lastRect.height;
+          }
+        }
+      }
+
+      getTopmostPID(){
+        let top=null, topZ=-1;
+        for (const [pid,entry] of this.windows){
+          const z = parseInt(entry.winEl.style.zIndex||0);
+          if (z>topZ){ top=pid; topZ=z; }
+        }
+        return top;
+      }
+
+      _makeDraggable(win, titleBar){
+        let dragging=false, offX=0, offY=0;
+        const onMove = (e)=>{
+          if(!dragging) return;
+          const x = e.clientX - offX;
+          const y = e.clientY - offY;
+          const maxX = window.innerWidth - win.offsetWidth;
+          const maxY = window.innerHeight - win.offsetHeight - 40;
+          win.style.left = Math.max(0, Math.min(x, maxX)) + "px";
+          win.style.top  = Math.max(0, Math.min(y, maxY)) + "px";
+        };
+        titleBar.addEventListener("mousedown",(e)=>{
+          dragging=true; offX = e.clientX - win.offsetLeft; offY = e.clientY - win.offsetTop;
+          win.style.zIndex = ++this.z;
+          document.addEventListener("mousemove", onMove);
+        });
+        document.addEventListener("mouseup",()=>{
+          dragging=false; document.removeEventListener("mousemove", onMove);
+        });
+      }
+
+      _makeResizable(win,resizer){
+        let resizing=false, startX=0, startY=0, startW=0, startH=0;
+        resizer.addEventListener("mousedown",(e)=>{
+          resizing=true; startX=e.clientX; startY=e.clientY; startW=win.offsetWidth; startH=win.offsetHeight;
+          document.body.style.cursor='se-resize';
+        });
+        document.addEventListener("mousemove",(e)=>{
+          if(!resizing) return;
+          win.style.width = Math.max(280, startW + (e.clientX - startX)) + "px";
+          win.style.height= Math.max(180, startH + (e.clientY - startY)) + "px";
+        });
+        document.addEventListener("mouseup",()=>{ if(resizing){resizing=false; document.body.style.cursor='default'; }});
+      }
+    }
+
+    class ThemeManager {
+      constructor(root){
+        this.root = root;
+        this.key = "pixelos.theme";
+        const saved = localStorage.getItem(this.key) || "teal";
+        this.apply(saved);
+      }
+      apply(name){
+        this.root.classList.remove("theme-dark","theme-light");
+        if (name === "dark") this.root.classList.add("theme-dark");
+        else if (name === "light") this.root.classList.add("theme-light");
+        else { /* teal default */ }
+        localStorage.setItem(this.key, name);
+      }
+    }
+
+    /* ---------------------------
+       Apps (lightweight implementations)
+       Each app.init() returns {el, cleanup}
+       --------------------------- */
+    const APPS = {
+      explorer: {
+        name:"File Explorer",
+        icon:'<svg class="desktop-icon-svg" viewBox="0 0 24 24" fill="#FFC107"><path d="M10 4H4c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>',
+        init(){
+          const root = document.createElement("div"); root.className="app-container";
+          root.innerHTML = `<div class="app-toolbar"><div>Explorer</div><div id="explorer-bc"></div></div><div class="app-main file-explorer"><div class="file-tree"></div><div class="file-list"></div></div>`;
+          const tree = root.querySelector(".file-tree");
+          const list = root.querySelector(".file-list");
+          const bc = root.querySelector("#explorer-bc");
+
+          function refreshTree(){
+            const nodes = Kernel.syscall("fs.list", "/");
+            tree.innerHTML = nodes.map(n => `<div data-path="${n}">${n}</div>`).join("");
+            // attach handlers
+            tree.querySelectorAll("div").forEach(d=>{
+              d.addEventListener("click", ()=> { selectFolder(d.dataset.path); });
             });
           }
-          // Close mobile menu after clicking a link
-          const mobileMenu = document.getElementById('mobile-menu');
-          if (!mobileMenu.classList.contains('hidden')) {
-            mobileMenu.classList.add('hidden');
+          function selectFolder(path){
+            bc.textContent = path;
+            const items = Kernel.syscall("fs.list", path) || [];
+            list.innerHTML = items.map(p => {
+              const meta = Kernel.syscall("fs.read", p) ? "file" : (Kernel.syscall("fs.exists", p) && Kernel.syscall("fs.list", p).length>=0 ? "folder":"file");
+              return `<div data-path="${p}">${p.split("/").pop()} <span style="color:gray">(${meta})</span></div>`;
+            }).join("");
+          }
+          refreshTree();
+          return { el: root, cleanup: ()=>{} };
+        }
+      },
+
+      notes: {
+        name:"Notes",
+        icon:'<svg class="desktop-icon-svg" viewBox="0 0 24 24" fill="#fff"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>',
+        init(){
+          const el = document.createElement("div"); el.className="app-container";
+          el.innerHTML = `<div class="app-toolbar"><div>Notes</div><div id="notes-meta"></div></div><div class="app-main"><textarea id="notes-textarea" style="width:100%;height:100%;font-family:monospace"></textarea></div>`;
+          const ta = el.querySelector("#notes-textarea");
+          const meta = el.querySelector("#notes-meta");
+          // load saved
+          ta.value = Kernel.syscall("fs.read", "/saves/notes.txt") || "";
+          meta.textContent = "Loaded";
+          // autosave on SaveService ticks
+          const unsub = Kernel.ipc.sub("autosave.tick", ()=>{
+            Kernel.syscall("fs.write","/saves/notes.txt", ta.value);
+            meta.textContent = `Autosaved ${new Date().toLocaleTimeString()}`;
+            Kernel.ipc.pub("notify.show",{message:"Notes autosaved."});
+          });
+          // also manual save on blur
+          ta.addEventListener("blur", ()=> {
+            Kernel.syscall("fs.write","/saves/notes.txt", ta.value);
+            meta.textContent = `Saved ${new Date().toLocaleTimeString()}`;
+          });
+          return { el, cleanup: unsub };
+        }
+      },
+
+      processmonitor: {
+        name:"Process Monitor",
+        icon:'<svg class="desktop-icon-svg" viewBox="0 0 24 24" fill="#42A5F5"><rect x="3" y="3" width="18" height="18" rx="2"/></svg>',
+        init(){
+          const el = document.createElement("div"); el.style.height="100%";
+          el.innerHTML = `<div class="app-toolbar"><div>Process Monitor</div></div><div class="app-main"><table><thead><tr><th>PID</th><th>Name</th><th>State</th><th>Prio</th><th>CPU%</th><th>Mem</th><th>MsgQ</th><th>Uptime</th><th>Graph</th></tr></thead><tbody></tbody></table></div>`;
+          const tbody = el.querySelector("tbody");
+          const iv = setInterval(()=> {
+            const rows = Kernel.syscall("process.getAll").map(p=>{
+              const uptime = Math.floor((Date.now()-p.startTime)/1000);
+              const cpuPercent = p.cpuUsage.totalTicks === 0 ? "0.0" : (((p.cpuUsage.history.filter(v=>v===1).length)/(p.cpuUsage.history.length||1))*100).toFixed(1);
+              return `<tr><td>${p.pid}</td><td>${p.name}</td><td>${p.state}</td><td>${p.priority}</td><td>${cpuPercent}%</td><td>${p.memory}MB</td><td>${p.messageQueue.length}</td><td>${uptime}s</td><td><canvas class="sparkline" data-pid="${p.pid}"></canvas></td></tr>`;
+            }).join("");
+            tbody.innerHTML = rows;
+            // draw sparklines
+            tbody.querySelectorAll(".sparkline").forEach(cv=>{
+              const pid = parseInt(cv.dataset.pid);
+              const p = Kernel.syscall("process.get",pid);
+              if (!p) return;
+              const ctx = cv.getContext("2d");
+              cv.width = 60; cv.height = 16;
+              ctx.clearRect(0,0,cv.width,cv.height);
+              ctx.beginPath(); ctx.strokeStyle="#000080";
+              p.cpuUsage.history.forEach((v,i)=>{
+                const x = (i/(p.cpuUsage.history.length||1))*cv.width;
+                const y = cv.height - (v*cv.height);
+                if (i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y);
+              });
+              ctx.stroke();
+            });
+          }, 1000);
+          return { el, cleanup: ()=>clearInterval(iv) };
+        }
+      },
+
+      terminal: {
+        name:"Terminal",
+        icon:'<svg class="desktop-icon-svg" viewBox="0 0 24 24" fill="#33ff33"><path d="M4 5v14h16V5H4zm2 2h12v2H6V7zm0 4h8v2H6v-2z"/></svg>',
+        init(){
+          const root = document.createElement("div"); root.className="terminal";
+          root.innerHTML = `<div class="terminal-output" id="term-out"></div><div class="terminal-input"><span>pixelos&gt;</span><input id="term-in" autocomplete="off"/></div>`;
+          const out = root.querySelector("#term-out");
+          const input = root.querySelector("#term-in");
+          function write(s){ out.innerHTML += s + "\n"; out.scrollTop = out.scrollHeight; }
+          write("PixelOS Pro Terminal. Type 'help'");
+          input.addEventListener("keydown",(e)=>{
+            if (e.key === "Enter"){
+              const cmd = input.value.trim(); input.value="";
+              write("> " + cmd);
+              handle(cmd);
+            }
+          });
+          function handle(cmd){
+            if (!cmd) return;
+            const parts = cmd.split(" ");
+            const c = parts[0].toLowerCase();
+            if (c==="help"){ write("help, about, clear, echo <text>, date, ps, top, open <app>, close <app>, prio <pid> <H|N|L>, pub <topic> <text>, fs ls <path>, fs cat <path>, fs write <path> <text>, net offline|online"); }
+            else if (c==="about") write("PixelOS Pro — demo OS");
+            else if (c==="clear") out.innerHTML="";
+            else if (c==="echo") write(parts.slice(1).join(" "));
+            else if (c==="date") write(new Date().toString());
+            else if (c==="ps"){
+              Kernel.syscall("process.getAll").forEach(p => write(`${p.pid}\t${p.name}\t${p.state}\t${p.priority}`));
+            } else if (c==="open"){
+              const app = parts[1];
+              if (app) {
+                const key = Object.keys(APPS).find(k=>APPS[k].name.toLowerCase()===app.toLowerCase() || k===app.toLowerCase());
+                if (key) UI.windowManager.open(APPS[key]);
+                else write("App not found: "+app);
+              }
+            } else if (c==="close"){
+              const app = parts[1];
+              if (app){
+                const p = Kernel.syscall("process.getAll").find(pp=> pp.name.toLowerCase()===app.toLowerCase() || pp.pid==app);
+                if (p) Kernel.syscall("process.terminate", p.pid);
+                else write("Process not found.");
+              }
+            } else if (c==="prio"){
+              const pid = parseInt(parts[1]); const pr = parts[2] && parts[2].toUpperCase();
+              if (pid && pr) { Kernel.scheduler.setPriority(pid, pr==="H"?"HIGH": pr==="L"?"LOW":"NORMAL"); write("OK"); } else write("usage: prio <pid> <H|N|L>");
+            } else if (c==="pub"){
+              const topic = parts[1]; const txt = parts.slice(2).join(" ");
+              Kernel.ipc.pub(topic, {from:"terminal", text:txt});
+              write("published");
+            } else if (c==="fs"){
+              const sub = parts[1];
+              if (sub==="ls"){ write((Kernel.syscall("fs.list", parts[2]||"/") || []).join("\n")); }
+              else if (sub==="cat"){ write(Kernel.syscall("fs.read", parts[2]||"") || ""); }
+              else if (sub==="write"){ const path = parts[2]; const txt = parts.slice(3).join(" "); Kernel.syscall("fs.write", path, txt); write("written"); }
+              else write("fs commands: ls <path>, cat <path>, write <path> <text>");
+            } else if (c==="net"){
+              if (parts[1]==="offline") Kernel.ipc.pub("net.toggle",{offline:true});
+              else Kernel.ipc.pub("net.toggle",{offline:false});
+              write("toggled network");
+            } else write("Unknown command");
+          }
+          return { el: root, cleanup: ()=>{} };
+        }
+      },
+
+      settings: {
+        name:"Settings",
+        icon:'<svg class="desktop-icon-svg" viewBox="0 0 24 24" fill="#9e9e9e"><path d="M19.43 12.98c.04-.32..."/></svg>',
+        init(){
+          const root = document.createElement("div"); root.className="app-container";
+          root.innerHTML = `<div class="app-toolbar"><div>Settings</div></div><div class="app-main"><div><label>Theme: <select id="theme-sel"><option value="teal">Teal</option><option value="dark">Dark</option><option value="light">Light</option></select></label></div><div style="margin-top:6px"><label><input type="checkbox" id="reduce-motion"/> Reduce Animations</label></div><div style="margin-top:6px"><button id="save-vfs">Manual Save VFS</button></div></div>`;
+          const sel = root.querySelector("#theme-sel");
+          const cb = root.querySelector("#reduce-motion");
+          sel.value = localStorage.getItem("pixelos.theme") || "teal";
+          sel.addEventListener("change", ()=> { UI.themeManager.apply(sel.value); });
+          cb.checked = document.body.classList.contains("animations-disabled");
+          cb.addEventListener("change", ()=> {
+            if (cb.checked) document.body.classList.add("animations-disabled"); else document.body.classList.remove("animations-disabled");
+            localStorage.setItem("pixelos.reducedMotion", cb.checked ? "1" : "0");
+          });
+          root.querySelector("#save-vfs").addEventListener("click", ()=> Kernel.fs.persist());
+          return { el: root, cleanup: ()=>{} };
+        }
+      },
+
+      logviewer: {
+        name:"Log Viewer",
+        icon:'<svg class="desktop-icon-svg" viewBox="0 0 24 24" fill="#ff9800"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>',
+        init(){
+          const root = document.createElement("div"); root.style.fontFamily="monospace"; root.style.height="100%"; root.style.overflow="auto";
+          const pre = document.createElement("pre"); pre.style.whiteSpace="pre-wrap";
+          root.appendChild(pre);
+          const unsub = Kernel.ipc.sub("kernel.log", (log)=> {
+            pre.textContent += `[${log.ts.toLocaleTimeString()}] [${log.source}] ${log.message}\n`;
+            root.scrollTop = root.scrollHeight;
+          });
+          return { el: root, cleanup: unsub };
+        }
+      }
+    };
+
+    /* ---------------------------
+       UI Glue
+       --------------------------- */
+    const UI = {
+      windowManager: null,
+      themeManager: null,
+      init(){
+        this.themeManager = new ThemeManager(document.body);
+        this.windowManager = new WindowManager(document.getElementById("screen"), document.getElementById("taskbar"), Kernel.processManager);
+        // store to Kernel.ui
+        Kernel.ui = this;
+        this.setupListeners();
+      },
+      setupListeners(){
+        const desktop = document.getElementById("desktop-icons");
+        const startBtn = document.getElementById("start-button");
+        const startMenu = document.getElementById("start-menu");
+        const tasks = document.getElementById("tasks-container");
+
+        // double click/dbl open
+        desktop.addEventListener("dblclick", (e)=>{
+          const icon = e.target.closest(".desktop-icon"); if (!icon) return;
+          const appId = icon.dataset.appid; if (!appId) return;
+          UI.windowManager.open(APPS[appId]);
+        });
+
+        // keyboard enter to open
+        desktop.addEventListener("keydown",(e)=>{
+          if (e.key==="Enter"){
+            const icon = e.target.closest(".desktop-icon"); if (!icon) return;
+            const appId = icon.dataset.appid; if (!appId) return;
+            UI.windowManager.open(APPS[appId]);
           }
         });
-      });
 
-      // Add scroll effect to navbar
-      window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if (window.scrollY > 100) {
-          header.style.background = 'rgba(255, 255, 255, 0.08)';
+        // start menu
+        startBtn.addEventListener("click",(ev)=>{
+          const expanded = startBtn.getAttribute("aria-expanded")==="true";
+          startBtn.setAttribute("aria-expanded", (!expanded).toString());
+          startMenu.style.display = expanded ? "none" : "flex";
+        });
+
+        startMenu.addEventListener("click",(e)=>{
+          const btn = e.target.closest("button"); if (!btn) return;
+          const act = btn.dataset.action;
+          if (act === "open-app") UI.windowManager.open(APPS[btn.dataset.appid]);
+          if (act === "shutdown") {
+            UI.showModal("Shut down PixelOS Pro?", ()=>{
+              Kernel.shutdown().then(()=> { document.getElementById("screen").style.display="none"; document.getElementById("shutdown-screen").style.display="flex"; });
+            });
+          }
+          startMenu.style.display = "none";
+        });
+
+        // taskbar clicks handled by windowManager via dataset pid button listeners - tasks are appended there
+
+        // ESC topmost close
+        document.addEventListener("keydown",(e)=>{
+          if (e.key === "Escape") {
+            const top = UI.windowManager.getTopmostPID();
+            if (top) UI.windowManager.close(top);
+          }
+        });
+      },
+
+      showModal(text, onConfirm){
+        const overlay = document.createElement("div"); overlay.className = "modal-overlay"; overlay.style.zIndex = 20000;
+        overlay.innerHTML = `<div class="modal-content"><p>${text}</p><div style="margin-top:12px"><button id="modal-ok">OK</button><button id="modal-cancel">Cancel</button></div></div>`;
+        document.body.appendChild(overlay);
+        overlay.querySelector("#modal-ok").onclick = ()=> { onConfirm(); overlay.remove(); };
+        overlay.querySelector("#modal-cancel").onclick = ()=> overlay.remove();
+      },
+
+      initDesktopIcons(){
+        const container = document.getElementById("desktop-icons");
+        container.innerHTML = "";
+        Object.keys(APPS).forEach(k=>{
+          const app = APPS[k];
+          const div = document.createElement("div");
+          div.className = "desktop-icon";
+          div.setAttribute("role","button");
+          div.setAttribute("tabindex","0");
+          div.setAttribute("aria-label", "Open " + app.name);
+          div.dataset.appid = k;
+          div.innerHTML = `${app.icon}<span>${app.name}</span>`;
+          container.appendChild(div);
+        });
+      }
+    };
+
+    /* ---------------------------
+       Boot sequence & startup
+       --------------------------- */
+    function bootSequence(){
+      const bootLog = document.getElementById("boot-log");
+      const msgs = [
+        "Boot ROM check...",
+        "Memory test (64KB)...",
+        "Loading Kernel...",
+        "Initializing Scheduler...",
+        "Mounting File System...",
+        "Starting Services...",
+        "Initializing UI...",
+        "PixelOS Pro Ready"
+      ];
+      let i = 0;
+      const iv = setInterval(()=>{
+        if (i < msgs.length) {
+          const d = document.createElement("div");
+          d.textContent = `> ${msgs[i]} OK`;
+          bootLog.appendChild(d);
+          bootLog.scrollTop = bootLog.scrollHeight;
+          i++;
         } else {
-          header.style.background = 'rgba(255, 255, 255, 0.05)';
+          clearInterval(iv);
+          startDesktop();
         }
+      }, Math.random()*200 + 120);
+
+      document.getElementById("skip-boot-button").onclick = ()=> { clearInterval(iv); startDesktop(); };
+      document.addEventListener("keydown",(e)=>{
+        if (e.key === "Enter" && document.getElementById("boot-screen").style.display !== "none") {
+          clearInterval(iv); startDesktop();
+        }
+      }, { once:true });
+    }
+
+    function startDesktop(){
+      document.getElementById("boot-screen").style.display = "none";
+      document.getElementById("screen").style.display = "block";
+      // start kernel and UI
+      Kernel.boot().then(()=> {
+        UI.init();
+        UI.initDesktopIcons();
+        // init window manager & taskbar are done in UI.init
+        // update clock
+        updateClock(); setInterval(updateClock, 1000);
+        // replay any queued logs
+        (Kernel.logQueue||[]).forEach(l=> Kernel.ipc.pub("kernel.log", l));
+        Kernel.logQueue = [];
       });
-    </script>
-  </body>
+    }
+
+    function updateClock(){
+      const c = document.getElementById("clock");
+      if (c) c.textContent = new Date().toLocaleTimeString([], {hour:"2-digit", minute:"2-digit"});
+    }
+
+    /* ---------------------------
+       Start boot
+       --------------------------- */
+    bootSequence();
+
+    // Expose globals for debug/interactive console if needed (safe)
+    window.PixelOS = { Kernel, UI, APPS };
+
+  })();
+  </script>
+</body>
 </html>
